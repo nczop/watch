@@ -1,50 +1,35 @@
 import React, { Component } from "react";
-import Products from "./Product"
 
-class App extends Component {
-
+class App extends Component { 
   state = {
-    products: [
-      {
-        id: 1,
-        name: "kawa"
-      },
-      {
-        id: 2,
-        name: "herbata"
-      },
-      {
-        id: 3,
-        name: "woda"
-      },
-      {
-        id: 4,
-        name: "piwo"
-      },
-    ]
+    time: this.getTime()
   }
 
-  find = (id) => {
-    const products = [...this.state.products]
-    const newList = this.state.products.findIndex(newItem => newItem.id === id)
-    products.splice(newList, 1)
-    this.setState({
-      products: products
+  getTime (){
+    const currentTime = new Date();
+    return ({
+      hours: currentTime.getHours(),
+      minutes: currentTime.getMinutes(),
+      secunds: currentTime.getSeconds(),
     })
-    console.log(this.state.products)
+  }
+
+  setTime = () => {
+    const time = this.getTime()
+    this.setState({
+      time: time
+    })
+  }
+
+  componentDidMount() {
+    setInterval (this.setTime, 1000)
   }
 
   render() {
+    const { hours, minutes, secunds} = this.state.time
     return (
-      <>
-        {this.state.products.map(product =>
-          <div>
-            <Products
-              id={product.id}
-              name={product.name}
-              find={this.find}
-            />
-          </div>)}
+      <>        
+        {hours} : {minutes} : {secunds}
       </>
     )
   }
