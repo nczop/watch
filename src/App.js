@@ -1,36 +1,37 @@
 import React, { Component } from "react";
+import Word from './Word'
+
+
 
 class App extends Component { 
+
   state = {
-    time: this.getTime()
+    words: [],
+    isLoaded: false,
   }
 
-  getTime (){
-    const currentTime = new Date();
-    return ({
-      hours: currentTime.getHours(),
-      minutes: currentTime.getMinutes(),
-      secunds: currentTime.getSeconds(),
+  componentDidMount () {
+    setTimeout(this.fetchData, 3000)    
+  }
+
+  fetchData = () => {
+    fetch('data/words.json')
+    .then(response => response.json() )
+    .then(data => {
+      this.setState({
+        words:data.words,
+        isLoaded: true
+      })
     })
   }
-
-  setTime = () => {
-    const time = this.getTime()
-    this.setState({
-      time: time
-    })
-  }
-
-  componentDidMount() {
-    setInterval (this.setTime, 1000)
-  }
-
-  render() {
-    const { hours, minutes, secunds} = this.state.time
+    
+  render() {    
+    const words = this.state.words.map(word => 
+    <Word key={word.id} en={word.en} pl={word.pl}/>)
     return (
-      <>        
-        {hours} : {minutes} : {secunds}
-      </>
+      <div>    
+      {this.state.isLoaded ? words : "wczytuje dane"}
+      </div>
     )
   }
 }
